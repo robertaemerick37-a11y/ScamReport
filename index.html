@@ -527,6 +527,11 @@
             <!-- INQUIRY FORM -->
             <form id="recoveryForm" action="#" method="POST">
               
+              <!-- Invisible honeypot field to trap spambots -->
+              <div style="display: none;" aria-hidden="true">
+                <input type="text" name="website_hp" id="website_hp" tabindex="-1" autocomplete="off" />
+              </div>
+
               <div class="form-row">
                 <div class="form-group">
                   <label for="fullName">Full name *</label>

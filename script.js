@@ -189,9 +189,15 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ==========================================
-  // EmailJS Form Integration & Custom Success Card
+  // EmailJS Form Integration & Security Settings
   // ==========================================
-  emailjs.init("wi6y_9u7aU7oF408i");
+  emailjs.init({
+    publicKey: "wi6y_9u7aU7oF408i",
+    blockHeadless: true, // Blocks automated bot scripts
+    limitRate: {
+      throttle: 10000,   // Enforces a 10-second wait between submissions per user
+    }
+  });
 
   var recoveryForm = document.getElementById("recoveryForm");
   var successCard = document.getElementById("successCard");
@@ -212,6 +218,13 @@ document.addEventListener('DOMContentLoaded', function () {
   if (recoveryForm && successCard) {
     recoveryForm.addEventListener("submit", function (event) {
       event.preventDefault();
+
+      // Check Honeypot: If filled out, it's a spambot—stop execution immediately
+      var honeypot = document.getElementById("website_hp");
+      if (honeypot && honeypot.value !== "") {
+        console.warn("Spam submission detected.");
+        return;
+      }
 
       var submitBtn = recoveryForm.querySelector('button[type="submit"]');
       var originalBtnText = submitBtn ? submitBtn.textContent : "SUBMIT CASE INQUIRY";
