@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ==========================================
-  // Dynamic Counter Animation (UPDATED TARGETS)
+  // Dynamic Counter Animation
   // ==========================================
   var counters = document.querySelectorAll('.stat-number[data-target]');
   var speed = 2000; // Total duration of animation in milliseconds (2 seconds)
@@ -191,13 +191,15 @@ document.addEventListener('DOMContentLoaded', function () {
   // ==========================================
   // EmailJS Form Integration & Security Settings
   // ==========================================
-  emailjs.init({
-    publicKey: "wi6y_9u7aU7oF408i",
-    blockHeadless: true, // Blocks automated bot scripts
-    limitRate: {
-      throttle: 10000,   // Enforces a 10-second wait between submissions per user
-    }
-  });
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init({
+      publicKey: "wi6y_9u7aU7oF408i",
+      blockHeadless: true, // Blocks automated bot scripts
+      limitRate: {
+        throttle: 10000,   // Enforces a 10-second wait between submissions per user
+      }
+    });
+  }
 
   var recoveryForm = document.getElementById("recoveryForm");
   var successCard = document.getElementById("successCard");
@@ -225,6 +227,21 @@ document.addEventListener('DOMContentLoaded', function () {
         console.warn("Spam submission detected.");
         return;
       }
+
+      // Check if EmailJS loaded properly (defense against ad-blockers)
+      if (typeof emailjs === 'undefined') {
+        alert("Unable to reach the email service. Please check your internet connection or ad-blocker settings, or email us directly.");
+        return;
+      }
+
+      // Trim form input strings
+      var fullName = document.getElementById("fullName");
+      var emailAddress = document.getElementById("emailAddress");
+      var caseDetails = document.getElementById("caseDetails");
+
+      if (fullName) fullName.value = fullName.value.trim();
+      if (emailAddress) emailAddress.value = emailAddress.value.trim();
+      if (caseDetails) caseDetails.value = caseDetails.value.trim();
 
       var submitBtn = recoveryForm.querySelector('button[type="submit"]');
       var originalBtnText = submitBtn ? submitBtn.textContent : "SUBMIT CASE INQUIRY";
