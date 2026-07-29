@@ -42,35 +42,18 @@ body {
   color: #ffffff;
 }
 
+
+/* Replace old logo mark rules with this */
 .logo-mark {
-  position: relative;
-  width: 34px;
-  height: 34px;
-  background: #ffffff;
-  border-radius: 50%;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-.logo-mark::before,
-.logo-mark::after {
-  content: "";
-  position: absolute;
-  background: #ffffff;
-  border-radius: 50%;
-}
-
-.logo-mark::before {
-  width: 16px;
-  height: 16px;
-  top: -8px;
-  left: -4px;
-}
-
-.logo-mark::after {
-  width: 12px;
-  height: 12px;
-  bottom: -6px;
-  right: -6px;
+  width: 32px;
+  height: 32px;
+  background-color: #ff0000; /* Adobe Red */
+  clip-path: polygon(
+    0 0, 100% 0, 100% 100%, 65% 100%, 50% 55%, 35% 100%, 0 100%, 0 0,
+    38% 22%, 50% 52%, 62% 22%
+  );
+  display: inline-block;
+  flex-shrink: 0;
 }
 
 .main-nav {
@@ -2190,4 +2173,22 @@ a.secondary-button:hover {
   .case-cta-container {
     padding: 32px 24px;
   }
+}
+/* Logo & Title Visibility Upgrade */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.6rem;         /* Bumps up the Caldermont title size */
+  font-weight: 800;          /* Keeps text bold and clear */
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Helps title stand out against the buildings */
+}
+
+.logo-image {
+  height: 160px;              /* Makes the logo mark significantly larger */
+  width: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4)); /* Optional: gives the mark depth */
 }
