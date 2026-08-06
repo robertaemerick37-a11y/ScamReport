@@ -1446,9 +1446,13 @@ a.secondary-button:hover {
   text-decoration: none;
 }
 
-.info-block a:hover {
+.info-block a[href^="mailto:"] {
+  color: #2563eb;
+}
+
+.info-block a[href^="mailto:"]:hover {
   text-decoration: underline;
-  color: #000000;
+  color: #1d4ed8;
 }
 
 .contact-form-container {
