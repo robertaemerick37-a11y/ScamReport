@@ -1629,23 +1629,52 @@ a.secondary-button:hover {
   max-width: 400px;
 }
 
-.brand-col .primary-button {
-  display: inline-block;
-  background-color: transparent;
-  color: #ffffff !important;
-  border: 2px solid #ffffff;
-  border-radius: 0;
+.footer-cta-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: fit-content;
+}
+
+.brand-col .primary-button,
+.brand-col .whatsapp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
   padding: 12px 28px;
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-decoration: none !important;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+}
+
+.brand-col .primary-button {
+  background-color: transparent;
+  color: #ffffff !important;
+  border: 2px solid #ffffff;
+  border-radius: 0;
 }
 
 .brand-col .primary-button:hover {
   background-color: #ffffff;
   color: #000000 !important; 
+}
+
+.brand-col .whatsapp-button {
+  background-color: #25d366;
+  color: #04130a !important;
+  border: 2px solid #25d366;
+  border-radius: 999px;
+}
+
+.brand-col .whatsapp-button:hover {
+  background-color: #1ebc5a;
+  border-color: #1ebc5a;
+  color: #04130a !important;
+  transform: translateY(-1px);
 }
 
 .footer-col h3 {
@@ -1707,6 +1736,18 @@ a.secondary-button:hover {
     grid-template-columns: 1fr;
     gap: 40px;
   }
+
+  .footer-cta-stack {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .brand-col .primary-button,
+  .brand-col .whatsapp-button {
+    width: 100%;
+    min-width: 0;
+  }
+
   .footer-bottom {
     flex-direction: column;
     gap: 15px;
