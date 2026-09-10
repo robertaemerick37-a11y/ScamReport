@@ -251,8 +251,25 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.disabled = true;
       }
 
-      // Send form data via EmailJS
-      emailjs.sendForm("service_6x3eyzc", "template_3ti8tlt", this)
+      var requestTimedOut = false;
+      var timeoutId = setTimeout(function () {
+        requestTimedOut = true;
+        if (submitBtn) {
+          submitBtn.textContent = originalBtnText;
+          submitBtn.disabled = false;
+        }
+        alert("The email service timed out. Please try again or email us directly.");
+      }, 15000);
+
+      // Send form data via EmailJS, but do not leave the form stuck if the request hangs.
+      var emailRequest = emailjs.sendForm("service_6x3eyzc", "template_3ti8tlt", this);
+      var timeoutRequest = new Promise(function (_, reject) {
+        setTimeout(function () {
+          reject(new Error("The email service timed out."));
+        }, 15000);
+      });
+
+      Promise.race([emailRequest, timeoutRequest])
         .then(function () {
           // Generate unique reference ID
           if (referenceCode) {
@@ -268,9 +285,12 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(function (error) {
           console.error("EmailJS Submission Error:", error);
-          alert("Failed to submit inquiry. Please try again or email us directly.");
+          if (!requestTimedOut) {
+            alert("Failed to submit inquiry. Please try again or email us directly.");
+          }
         })
         .finally(function () {
+          clearTimeout(timeoutId);
           if (submitBtn) {
             submitBtn.textContent = originalBtnText;
             submitBtn.disabled = false;
