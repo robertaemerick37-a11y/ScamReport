@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // ==========================================
   if (typeof emailjs !== 'undefined') {
     emailjs.init({
-      publicKey: "wi6y_9u7aU7oF408i",
+      publicKey: "IAzC66I-ra2Iz9ofT",
       blockHeadless: true, // Blocks automated bot scripts
       limitRate: {
         throttle: 10000,   // Enforces a 10-second wait between submissions per user
