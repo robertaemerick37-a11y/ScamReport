@@ -9,12 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned
-- Performance optimization for media assets.
-- Analytics integration.
+### Changed
+- Switched the contact form from EmailJS to FormSubmit.co to avoid domain verification and paid subscription requirements.
+- Preserved the site’s custom success state and form placeholders while using native form submission.
+- Updated the form target to the Proton Mail mailbox used for receiving inquiries.
 
 ### Fixed
 - Adjusted mobile padding on the contact form section.
+- Removed the failed EmailJS timeout logic and replaced it with a lightweight native form submission flow.
 ---
 
 ## [1.1.0] - 2026-07-27

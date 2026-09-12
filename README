@@ -1,38 +1,43 @@
 # Caldermont
 
-A responsive, static web application designed for asset recovery and inquiry management. Built with modern HTML, CSS, and vanilla JavaScript.
+A responsive static landing page and inquiry form for asset recovery and scam reporting support, built with HTML, CSS, and vanilla JavaScript.
 
 ## Features
 
 - **Smooth Scroll Navigation:** Dynamic navigation and section scrolling.
-- **Interactive FAQ:** Custom JS accordion for interactive support queries.
-- **Client-Side Form Handling:** Integrates EmailJS for inquiries with rate limiting and automated spam honeypot filters.
+- **Interactive FAQ:** Custom JS accordion for support-related questions.
+- **Custom Inquiry Form Flow:** Native form submission to FormSubmit.co while preserving the current site layout and success card UX.
 - **Responsive Testimonial Slider:** Dynamic carousel layout with autoplay.
 
 ## Tech Stack
 
 - **Frontend:** HTML5, CSS3, JavaScript (ES6)
-- **Services:** EmailJS (Form API)
+- **Form Delivery:** FormSubmit.co
 - **Deployment & Hosting:** Vercel, Namecheap DNS
 
 ## Getting Started Locally
 
-To run this project locally, clone the repository and open `index.html` in your browser:
+To run this project locally:
 
-\`\`\`bash
-# Clone the repository
-git clone https://github.com/your-username/caldermont.git
+```bash
+# From the project folder
+python -m http.server 8000
+```
 
-# Navigate into the directory
-cd caldermont
-\`\`\`
+Then open:
 
-Open `index.html` directly or use Live Server in VS Code.
+```text
+http://localhost:8000
+```
+
+## Form Setup
+
+The contact form sends submissions to the configured FormSubmit endpoint for the designated Proton Mail inbox. The page preserves its existing placeholders and visual structure while submitting through the native form POST flow.
 
 ## Security Configuration
 
-- Enforces HTTP Security Headers via `vercel.json` (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`).
-- Rate limiting and bot detection enabled via EmailJS.
+- Enforces HTTP security headers via `vercel.json` (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`).
+- Includes a basic honeypot field to reduce spam submissions.
 
 ## License
 
