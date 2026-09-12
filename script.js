@@ -191,14 +191,22 @@ document.addEventListener('DOMContentLoaded', function () {
   // ==========================================
   // EmailJS Form Integration & Security Settings
   // ==========================================
+  var EMAILJS_PUBLIC_KEY = "IAzC66I-ra2Iz9ofT";
+  var EMAILJS_SERVICE_ID = "service_6x3eyzc";
+  var EMAILJS_TEMPLATE_ID = "template_3ti8tlt";
+
   if (typeof emailjs !== 'undefined') {
-    emailjs.init({
-      publicKey: "IAzC66I-ra2Iz9ofT",
-      blockHeadless: true, // Blocks automated bot scripts
-      limitRate: {
-        throttle: 10000,   // Enforces a 10-second wait between submissions per user
-      }
-    });
+    if (!EMAILJS_PUBLIC_KEY || EMAILJS_PUBLIC_KEY === "YOUR_EMAILJS_PUBLIC_KEY") {
+      console.warn("EmailJS public key is not configured. Add the real key from your EmailJS dashboard before enabling form submissions.");
+    } else {
+      emailjs.init({
+        publicKey: EMAILJS_PUBLIC_KEY,
+        blockHeadless: true, // Blocks automated bot scripts
+        limitRate: {
+          throttle: 10000,   // Enforces a 10-second wait between submissions per user
+        }
+      });
+    }
   }
 
   var recoveryForm = document.getElementById("recoveryForm");
@@ -234,6 +242,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
+      if (!EMAILJS_PUBLIC_KEY || EMAILJS_PUBLIC_KEY === "YOUR_EMAILJS_PUBLIC_KEY") {
+        alert("The contact form is not configured yet. Add your EmailJS public key in script.js before sending inquiries.");
+        return;
+      }
+
       // Trim form input strings
       var fullName = document.getElementById("fullName");
       var emailAddress = document.getElementById("emailAddress");
@@ -262,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }, 15000);
 
       // Send form data via EmailJS, but do not leave the form stuck if the request hangs.
-      var emailRequest = emailjs.sendForm("service_6x3eyzc", "template_3ti8tlt", this);
+      var emailRequest = emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, this);
       var timeoutRequest = new Promise(function (_, reject) {
         setTimeout(function () {
           reject(new Error("The email service timed out."));
