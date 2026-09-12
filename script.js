@@ -189,25 +189,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ==========================================
-  // EmailJS Form Integration & Security Settings
+  // FormSubmit.co Form Integration
   // ==========================================
-  var EMAILJS_PUBLIC_KEY = "IAzC66I-ra2Iz9ofT";
-  var EMAILJS_SERVICE_ID = "service_6x3eyzc";
-  var EMAILJS_TEMPLATE_ID = "template_3ti8tlt";
-
-  if (typeof emailjs !== 'undefined') {
-    if (!EMAILJS_PUBLIC_KEY || EMAILJS_PUBLIC_KEY === "YOUR_EMAILJS_PUBLIC_KEY") {
-      console.warn("EmailJS public key is not configured. Add the real key from your EmailJS dashboard before enabling form submissions.");
-    } else {
-      emailjs.init({
-        publicKey: EMAILJS_PUBLIC_KEY,
-        blockHeadless: true, // Blocks automated bot scripts
-        limitRate: {
-          throttle: 10000,   // Enforces a 10-second wait between submissions per user
-        }
-      });
-    }
-  }
+  var FORMSUBMIT_EMAIL = "Williampembroke@proton.me";
 
   var recoveryForm = document.getElementById("recoveryForm");
   var successCard = document.getElementById("successCard");
@@ -229,31 +213,27 @@ document.addEventListener('DOMContentLoaded', function () {
     recoveryForm.addEventListener("submit", function (event) {
       event.preventDefault();
 
-      // Check Honeypot: If filled out, it's a spambot—stop execution immediately
       var honeypot = document.getElementById("website_hp");
       if (honeypot && honeypot.value !== "") {
         console.warn("Spam submission detected.");
         return;
       }
 
-      // Check if EmailJS loaded properly (defense against ad-blockers)
-      if (typeof emailjs === 'undefined') {
-        alert("Unable to reach the email service. Please check your internet connection or ad-blocker settings, or email us directly.");
-        return;
-      }
-
-      if (!EMAILJS_PUBLIC_KEY || EMAILJS_PUBLIC_KEY === "YOUR_EMAILJS_PUBLIC_KEY") {
-        alert("The contact form is not configured yet. Add your EmailJS public key in script.js before sending inquiries.");
-        return;
-      }
-
-      // Trim form input strings
       var fullName = document.getElementById("fullName");
       var emailAddress = document.getElementById("emailAddress");
+      var phoneNumber = document.getElementById("phoneNumber");
+      var platformName = document.getElementById("platformName");
+      var country = document.getElementById("country");
+      var estimatedLoss = document.getElementById("estimatedLoss");
+      var urgency = document.querySelector('input[name="urgency"]:checked');
       var caseDetails = document.getElementById("caseDetails");
 
       if (fullName) fullName.value = fullName.value.trim();
       if (emailAddress) emailAddress.value = emailAddress.value.trim();
+      if (phoneNumber) phoneNumber.value = phoneNumber.value.trim();
+      if (platformName) platformName.value = platformName.value.trim();
+      if (country) country.value = country.value.trim();
+      if (estimatedLoss) estimatedLoss.value = estimatedLoss.value.trim();
       if (caseDetails) caseDetails.value = caseDetails.value.trim();
 
       var submitBtn = recoveryForm.querySelector('button[type="submit"]');
@@ -264,46 +244,48 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.disabled = true;
       }
 
-      var requestTimedOut = false;
-      var timeoutId = setTimeout(function () {
-        requestTimedOut = true;
-        if (submitBtn) {
-          submitBtn.textContent = originalBtnText;
-          submitBtn.disabled = false;
-        }
-        alert("The email service timed out. Please try again or email us directly.");
-      }, 15000);
+      var payload = {
+        fullName: fullName ? fullName.value : "",
+        emailAddress: emailAddress ? emailAddress.value : "",
+        phoneNumber: phoneNumber ? phoneNumber.value : "",
+        platformName: platformName ? platformName.value : "",
+        country: country ? country.value : "",
+        estimatedLoss: estimatedLoss ? estimatedLoss.value : "",
+        urgency: urgency ? urgency.value : "normal",
+        caseDetails: caseDetails ? caseDetails.value : "",
+        _subject: "New Caldermont inquiry",
+        _captcha: "false"
+      };
 
-      // Send form data via EmailJS, but do not leave the form stuck if the request hangs.
-      var emailRequest = emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, this);
-      var timeoutRequest = new Promise(function (_, reject) {
-        setTimeout(function () {
-          reject(new Error("The email service timed out."));
-        }, 15000);
-      });
-
-      Promise.race([emailRequest, timeoutRequest])
+      fetch("https://formsubmit.co/ajax/" + FORMSUBMIT_EMAIL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("FormSubmit request failed with status " + response.status);
+          }
+          return response.json();
+        })
         .then(function () {
-          // Generate unique reference ID
           if (referenceCode) {
             referenceCode.textContent = "Reference: " + generateReferenceID();
           }
 
-          // Hide form and show success card
           recoveryForm.style.display = "none";
           if (formTitleTag) formTitleTag.style.display = "none";
           successCard.style.display = "block";
-
           recoveryForm.reset();
         })
         .catch(function (error) {
-          console.error("EmailJS Submission Error:", error);
-          if (!requestTimedOut) {
-            alert("Failed to submit inquiry. Please try again or email us directly.");
-          }
+          console.error("FormSubmit Submission Error:", error);
+          alert("The form could not be sent right now. Please try again or email us directly at Williampembroke@proton.me.");
         })
         .finally(function () {
-          clearTimeout(timeoutId);
           if (submitBtn) {
             submitBtn.textContent = originalBtnText;
             submitBtn.disabled = false;
@@ -311,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Reset view when clicking "Submit another inquiry"
     if (resetFormBtn) {
       resetFormBtn.addEventListener("click", function () {
         successCard.style.display = "none";
